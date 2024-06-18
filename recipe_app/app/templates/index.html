@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Recipes</h1>
+    {% for recipe in recipes.items %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ recipe.title }}</h5>
+                <p class="card-text">{{ recipe.description }}</p>
+                <a href="{{ url_for('main.recipe', recipe_id=recipe.id) }}" class="btn btn-primary">View Recipe</a>
+                {% if current_user.is_authenticated and recipe.user == current_user %}
+                    <a href="{{ url_for('main.recipe', recipe_id=recipe.id) }}" class="btn btn-secondary">Edit</a>
+                    <form action="{{ url_for('main.delete_recipe', recipe_id=recipe.id) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="pagination">
+        {% if recipes.has_prev %}
+            <a href="{{ url_for('main.index', page=recipes.prev_num) }}" class="btn btn-outline-primary">&laquo; Previous</a>
+        {% endif %}
+        {% if recipes.has_next %}
+            <a href="{{ url_for('main.index', page=recipes.next_num) }}" class="btn btn-outline-primary">Next &raquo;</a>
+        {% endif %}
+    </div>
+{% endblock %}
